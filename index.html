@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HVS Payroll Pro - Boss</title>
+    <title>HVS Payroll Compact - Boss</title>
     <style>
         :root { --green-bg: #c6e0b4; --yellow-bg: #ffe699; --orange-bg: #f8cbad; --border-color: #444; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 8px; background-color: #f0f2f5; font-size: 13px; }
-        .container { max-width: 100%; margin: auto; background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 5px; background-color: #f0f2f5; font-size: 12px; }
+        .container { max-width: 100%; margin: auto; background: white; padding: 10px; border-radius: 8px; }
         
-        h2 { text-align: center; margin: 5px 0 15px 0; font-size: 1.1rem; color: #1a3a5a; text-transform: uppercase; }
-        .setup-section { background: #f8f9fa; padding: 8px; border-radius: 6px; margin-bottom: 12px; display: flex; gap: 10px; border: 1px solid #ddd; }
-        select, input { padding: 6px; border-radius: 4px; border: 1px solid #ccc; font-size: 15px; }
+        h2 { text-align: center; margin: 5px 0; font-size: 1rem; color: #1a3a5a; text-transform: uppercase; }
+        .setup-section { background: #f8f9fa; padding: 5px; border-radius: 4px; margin-bottom: 10px; display: flex; gap: 5px; border: 1px solid #ddd; }
+        select, input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 14px; }
 
-        .table-responsive { width: 100%; overflow-x: auto; margin-bottom: 12px; border: 1px solid var(--border-color); }
-        table { width: 100%; min-width: 420px; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 1px solid var(--border-color); text-align: center; padding: 4px 1px; }
+        .table-responsive { width: 100%; overflow-x: auto; margin-bottom: 10px; border: 1px solid var(--border-color); }
+        table { width: 100%; min-width: 380px; border-collapse: collapse; table-layout: fixed; }
+        th, td { border: 1px solid var(--border-color); text-align: center; padding: 2px 0; height: 30px; }
         
-        .header-green { background-color: var(--green-bg); font-weight: bold; font-size: 11px; }
-        .label-cell { text-align: left; padding-left: 5px; font-weight: bold; width: 85px; background: #fdfdfd; }
-        .total-header { background-color: #eee; font-weight: bold; width: 55px; font-size: 10px; }
-        .total-val { background-color: #fcfcfc; font-weight: bold; color: #000; }
+        .header-green { background-color: var(--green-bg); font-weight: bold; font-size: 10px; }
+        .label-cell { text-align: left; padding-left: 4px; font-weight: bold; width: 60px; background: #fafafa; font-size: 11px; }
+        .day-col { width: 38px; } /* Độ rộng cố định cho các cột ngày */
+        .total-header { background-color: #eee; font-weight: bold; width: 45px; font-size: 9px; }
+        .total-val { background-color: #f9f9f9; font-weight: bold; font-size: 13px; }
         .sun-column { background-color: #fff0f0; color: red; }
 
-        input.cell-input { width: 100%; border: none; text-align: center; font-size: 16px; outline: none; background: transparent; font-weight: bold; padding: 4px 0; }
+        input.cell-input { width: 100%; border: none; text-align: center; font-size: 16px; outline: none; background: transparent; font-weight: bold; padding: 0; }
 
-        .summary-wrapper { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; border-top: 2px solid #eee; padding-top: 15px; }
+        .summary-wrapper { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; border-top: 2px solid #eee; padding-top: 10px; }
         .salary-table { width: 100%; border: 1px solid var(--border-color); }
-        .salary-table input { border: none; text-align: right; font-weight: bold; font-size: 15px; background: #fffdf0; width: 100%; padding: 5px; box-sizing: border-box; }
-        .salary-table td { padding: 8px; border: 1px solid #ddd; }
+        .salary-table input { border: none; text-align: right; font-weight: bold; font-size: 14px; background: #fffdf0; width: 100%; padding: 4px; box-sizing: border-box; }
+        .salary-table td { padding: 6px; border: 1px solid #ddd; }
         
         .btn-save { background-color: #28a745; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; }
-        .final-row { background-color: var(--yellow-bg); font-weight: bold; font-size: 1.15em; }
+        .final-row { background-color: var(--yellow-bg); font-weight: bold; font-size: 1.1em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>QUẢN LÝ CÔNG & LƯƠNG HVS</h2>
+    <h2>HVS - QUẢN LÝ CÔNG</h2>
 
     <div class="setup-section">
         <select id="month-select" onchange="renderCalendar()" style="flex:2"></select>
@@ -47,24 +48,20 @@
     <div id="calendar-content"></div>
 
     <div class="summary-wrapper">
-        <button class="btn-save" onclick="saveData()">LƯU DỮ LIỆU NHẬP</button>
+        <button class="btn-save" onclick="saveData()">LƯU DỮ LIỆU</button>
         
         <table style="width: 100%;">
-            <tr><td class="label-cell" style="background:var(--green-bg)">TỔNG THƯỜNG</td><td id="res-thuong" style="font-weight:bold; text-align:right; padding-right:15px">0</td></tr>
-            <tr><td class="label-cell" style="background:var(--orange-bg)">TỔNG OVT</td><td id="res-ovt" style="font-weight:bold; text-align:right; padding-right:15px">0</td></tr>
-            <tr><td class="label-cell" style="background:var(--yellow-bg)">TỔNG CN</td><td id="res-cn" style="font-weight:bold; text-align:right; padding-right:15px">0</td></tr>
+            <tr><td class="label-cell" style="background:var(--green-bg)">TỔNG THƯỜNG</td><td id="res-thuong" style="font-weight:bold; text-align:right; padding-right:10px">0</td></tr>
+            <tr><td class="label-cell" style="background:var(--orange-bg)">TỔNG OVT</td><td id="res-ovt" style="font-weight:bold; text-align:right; padding-right:10px">0</td></tr>
+            <tr><td class="label-cell" style="background:var(--yellow-bg)">TỔNG CN</td><td id="res-cn" style="font-weight:bold; text-align:right; padding-right:10px">0</td></tr>
         </table>
 
         <table class="salary-table">
             <tr><td class="label-cell">LCB</td><td><input type="number" id="in-lcb" value="11110000" oninput="calculate()"></td></tr>
-            <tr><td class="label-cell">Lương giờ</td><td id="lbl-luong-gio">0</td></tr>
-            <tr><td class="label-cell">Lương Thêm giờ</td><td id="lbl-ovt-money">0</td></tr>
             <tr><td class="label-cell">PC Chức vụ</td><td><input type="number" id="in-pc-chucvu" value="1600000" oninput="calculate()"></td></tr>
-            <tr><td class="label-cell">PC Công việc</td><td><input type="number" id="in-pc-congviec" value="750000" oninput="calculate()"></td></tr>
+            <tr><td class="label-cell">PC C.Việc</td><td><input type="number" id="in-pc-congviec" value="750000" oninput="calculate()"></td></tr>
             <tr><td class="label-cell">PC Thâm niên</td><td><input type="number" id="in-pc-thamnien" value="590000" oninput="calculate()"></td></tr>
-            <tr><td class="label-cell">BHXH (8%)</td><td id="lbl-bhxh">0</td></tr>
-            <tr><td class="label-cell">BHYT (1.5%)</td><td id="lbl-bhyt">0</td></tr>
-            <tr><td class="label-cell">BHTN (1%)</td><td id="lbl-bhtn">0</td></tr>
+            <tr><td class="label-cell" style="font-size:0.85em; color:#666">Bảo hiểm (10.5%)</td><td id="lbl-bh" style="color:#666">0</td></tr>
             <tr class="final-row">
                 <td class="label-cell">THỰC NHẬN</td>
                 <td id="lbl-total" style="color: #d9534f;">0</td>
@@ -103,19 +100,19 @@
             wrap.className = 'table-responsive';
             let table = document.createElement('table');
             
-            let hRow = `<tr class="header-green"><td class="label-cell">Thứ</td>`, 
-                dRow = `<tr class="header-green"><td class="label-cell">Ngày</td>`, 
+            let hRow = `<tr><td class="label-cell header-green">Thứ</td>`, 
+                dRow = `<tr><td class="label-cell header-green">Ngày</td>`, 
                 tRow = `<tr><td class="label-cell">Thường</td>`, 
                 oRow = `<tr><td class="label-cell">OVT</td>`,
                 cRow = `<tr><td class="label-cell">CN</td>`;
             
             for (let i = 0; i < 7; i++) {
                 let isSun = (i === 6);
-                hRow += `<td class="${isSun ? 'sun-column' : ''}">${daysOfWeek[i]}</td>`;
+                hRow += `<td class="day-col header-green ${isSun ? 'sun-column' : ''}">${daysOfWeek[i]}</td>`;
                 if ((dayCounter === 1 && i < startPos) || dayCounter > lastDay) {
-                    dRow += '<td></td>'; tRow += '<td></td>'; oRow += '<td></td>'; cRow += '<td></td>';
+                    dRow += '<td class="day-col"></td>'; tRow += '<td></td>'; oRow += '<td></td>'; cRow += '<td></td>';
                 } else {
-                    dRow += `<td class="${isSun ? 'sun-column' : ''}">${dayCounter}</td>`;
+                    dRow += `<td class="day-col header-green ${isSun ? 'sun-column' : ''}">${dayCounter}</td>`;
                     if (isSun) {
                         tRow += `<td class="sun-column"></td>`;
                         oRow += `<td class="sun-column"></td>`;
@@ -128,9 +125,8 @@
                     dayCounter++;
                 }
             }
-            // Thêm các cột Tổng cho từng hạng mục của tuần
             hRow += '<td class="total-header">TỔNG</td></tr>';
-            dRow += '<td class="header-green">TUẦN</td></tr>';
+            dRow += '<td class="header-green" style="font-size:9px">TUẦN</td></tr>';
             tRow += '<td class="total-val w-t">0</td></tr>';
             oRow += '<td class="total-val w-o">0</td></tr>';
             cRow += '<td class="total-val w-c">0</td></tr>';
@@ -144,76 +140,56 @@
     }
 
     function calculate() {
-        let totalT = 0, totalO = 0, totalC = 0;
+        let tT = 0, tO = 0, tC = 0;
         document.querySelectorAll('table').forEach(tbl => {
             if(tbl.parentElement.className === 'table-responsive') {
                 let wt = 0, wo = 0, wc = 0;
                 tbl.querySelectorAll('.in-t').forEach(i => wt += Number(i.value) || 0);
                 tbl.querySelectorAll('.in-o').forEach(i => wo += Number(i.value) || 0);
                 tbl.querySelectorAll('.in-c').forEach(i => wc += Number(i.value) || 0);
-                
-                // Cập nhật tổng tuần cho từng dòng
-                tbl.querySelector('.w-t').innerText = wt;
-                tbl.querySelector('.w-o').innerText = wo;
-                tbl.querySelector('.w-c').innerText = wc;
-                
-                totalT += wt; totalO += wo; totalC += wc;
+                tbl.querySelector('.w-t').innerText = wt || '';
+                tbl.querySelector('.w-o').innerText = wo || '';
+                tbl.querySelector('.w-c').innerText = wc || '';
+                tT += wt; tO += wo; tC += wc;
             }
         });
-
-        document.getElementById('res-thuong').innerText = totalT;
-        document.getElementById('res-ovt').innerText = totalO;
-        document.getElementById('res-cn').innerText = totalC;
+        document.getElementById('res-thuong').innerText = tT;
+        document.getElementById('res-ovt').innerText = tO;
+        document.getElementById('res-cn').innerText = tC;
 
         const lcb = Number(document.getElementById('in-lcb').value) || 0;
-        const pccv = Number(document.getElementById('in-pc-chucvu').value) || 0;
-        const pctn = Number(document.getElementById('in-pc-thamnien').value) || 0;
-        const pccviec = Number(document.getElementById('in-pc-congviec').value) || 0;
-
-        const luongGio = Math.round(lcb / 208);
-        const tienOvt = Math.round(totalO * luongGio * 1.5);
-        const tienCn = Math.round(totalC * luongGio * 2.0);
-        
-        const bhxh = Math.round(lcb * 0.08);
-        const bhyt = Math.round(lcb * 0.015);
-        const bhtn = Math.round(lcb * 0.01);
-
-        const final = (lcb + tienOvt + tienCn + pccv + pctn + pccviec) - (bhxh + bhyt + bhtn);
-
-        document.getElementById('lbl-luong-gio').innerText = luongGio.toLocaleString();
-        document.getElementById('lbl-ovt-money').innerText = (tienOvt + tienCn).toLocaleString();
-        document.getElementById('lbl-bhxh').innerText = bhxh.toLocaleString();
-        document.getElementById('lbl-bhyt').innerText = bhyt.toLocaleString();
-        document.getElementById('lbl-bhtn').innerText = bhtn.toLocaleString();
-        document.getElementById('lbl-total').innerText = final.toLocaleString() + " ₫";
+        const pc = (Number(document.getElementById('in-pc-chucvu').value) || 0) + (Number(document.getElementById('in-pc-congviec').value) || 0) + (Number(document.getElementById('in-pc-thamnien').value) || 0);
+        const lGio = Math.round(lcb / 208);
+        const tOvt = Math.round((tO * 1.5 + tC * 2.0) * lGio);
+        const bh = Math.round(lcb * 0.105);
+        document.getElementById('lbl-bh').innerText = bh.toLocaleString();
+        document.getElementById('lbl-total').innerText = (lcb + pc + tOvt - bh).toLocaleString() + " ₫";
     }
 
     function saveData() {
-        const month = document.getElementById('month-select').value;
-        const year = document.getElementById('year-select').value;
-        const data = { thuong: {}, ovt: {}, cn: {}, salary: {} };
-        document.querySelectorAll('.in-t').forEach(i => { if(i.dataset.day) data.thuong[i.dataset.day] = i.value });
-        document.querySelectorAll('.in-o').forEach(i => { if(i.dataset.day) data.ovt[i.dataset.day] = i.value });
-        document.querySelectorAll('.in-c').forEach(i => { if(i.dataset.day) data.cn[i.dataset.day] = i.value });
-        data.salary = { lcb: document.getElementById('in-lcb').value, pccv: document.getElementById('in-pc-chucvu').value, pccviec: document.getElementById('in-pc-congviec').value, pctn: document.getElementById('in-pc-thamnien').value };
-        localStorage.setItem(`hvs_data_${year}_${month}`, JSON.stringify(data));
-        alert("Boss ơi, dữ liệu đã được lưu an toàn!");
+        const m = document.getElementById('month-select').value, y = document.getElementById('year-select').value;
+        const d = { t: {}, o: {}, c: {}, s: {} };
+        document.querySelectorAll('.in-t').forEach(i => d.t[i.dataset.day] = i.value);
+        document.querySelectorAll('.in-o').forEach(i => d.o[i.dataset.day] = i.value);
+        document.querySelectorAll('.in-c').forEach(i => d.c[i.dataset.day] = i.value);
+        d.s = { lcb: document.getElementById('in-lcb').value, pccv: document.getElementById('in-pc-chucvu').value, pccv2: document.getElementById('in-pc-congviec').value, pctn: document.getElementById('in-pc-thamnien').value };
+        localStorage.setItem(`hvs_${y}_${m}`, JSON.stringify(d));
+        alert("Đã lưu dữ liệu cho Boss!");
     }
 
     function loadSavedData() {
-        const month = document.getElementById('month-select').value;
-        const year = document.getElementById('year-select').value;
-        const saved = localStorage.getItem(`hvs_data_${year}_${month}`);
-        if (saved) {
-            const data = JSON.parse(saved);
-            document.querySelectorAll('.in-t').forEach(i => { if(data.thuong[i.dataset.day]) i.value = data.thuong[i.dataset.day] });
-            document.querySelectorAll('.in-o').forEach(i => { if(data.ovt[i.dataset.day]) i.value = data.ovt[i.dataset.day] });
-            document.querySelectorAll('.in-c').forEach(i => { if(data.cn[i.dataset.day]) i.value = data.cn[i.dataset.day] });
-            if(data.salary) {
-                document.getElementById('in-lcb').value = data.salary.lcb;
-                document.getElementById('in-pc-chucvu').value = data.salary.pccv;
-                document.getElementById('in-pc-congviec').value = data.salary.pccviec;
-                document.getElementById('in-pc-thamnien').value = data.salary.pctn;
+        const m = document.getElementById('month-select').value, y = document.getElementById('year-select').value;
+        const s = localStorage.getItem(`hvs_${y}_${m}`);
+        if (s) {
+            const d = JSON.parse(s);
+            document.querySelectorAll('.in-t').forEach(i => i.value = d.t[i.dataset.day] || '');
+            document.querySelectorAll('.in-o').forEach(i => i.value = d.o[i.dataset.day] || '');
+            document.querySelectorAll('.in-c').forEach(i => i.value = d.c[i.dataset.day] || '');
+            if(d.s) {
+                document.getElementById('in-lcb').value = d.s.lcb;
+                document.getElementById('in-pc-chucvu').value = d.s.pccv;
+                document.getElementById('in-pc-congviec').value = d.s.pccv2;
+                document.getElementById('in-pc-thamnien').value = d.s.pctn;
             }
         }
     }
