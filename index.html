@@ -1,95 +1,92 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Bảng chấm công tháng</title>
-
-<style>
-body { font-family: Arial; padding: 20px; }
-input, button { padding: 5px; margin: 5px; }
-
-table {
-  border-collapse: collapse;
-  font-size: 12px;
-}
-th, td {
-  border: 1px solid #ccc;
-  padding: 5px;
-  text-align: center;
-}
-th {
-  background: #eee;
-}
-input.day {
-  width: 40px;
-  text-align: center;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Bảng Nhập Công - Boss</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: center; }
+        th, td { border: 1px solid #333; padding: 8px; width: 10%; }
+        .header-green { background-color: #c6e0b4; font-weight: bold; }
+        .label-cell { background-color: #ffffff; text-align: left; padding-left: 10px; font-weight: bold; }
+        .total-cell { background-color: #f2f2f2; font-weight: bold; }
+        .summary-table { width: 200px; float: right; }
+        .summary-header { background-color: #ffe699; }
+        input { width: 90%; border: none; text-align: center; font-size: 16px; outline: none; }
+        input:focus { background-color: #fff9c4; }
+    </style>
 </head>
-
 <body>
 
-<h2>Bảng chấm công</h2>
+<div class="container">
+    <h2 style="text-align: center;">BẢNG CHẤM CÔNG HÀNG THÁNG</h2>
 
-<input id="ten" placeholder="Tên nhân viên">
-<input id="luong" type="number" placeholder="Lương/ngày">
-<input id="thang" type="number" placeholder="Tháng (1-12)">
-<input id="nam" type="number" placeholder="Năm">
-<button onclick="taoBang()">Tạo bảng</button>
+    <table id="week1">
+        <tr class="header-green">
+            <td colspan="1"></td><td>CN</td><td></td><td></td><td></td><td></td><td></td><td>T7</td><td rowspan="2">TỔNG</td>
+        </tr>
+        <tr class="header-green">
+            <td>Ngày</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td>
+        </tr>
+        <tr>
+            <td class="label-cell">Thường</td>
+            <td><input type="number" class="thuong" data-week="1"></td>
+            <td><input type="number" class="thuong" data-week="1"></td>
+            <td><input type="number" class="thuong" data-week="1"></td>
+            <td><input type="number" class="thuong" data-week="1"></td>
+            <td><input type="number" class="thuong" data-week="1"></td>
+            <td><input type="number" class="thuong" data-week="1"></td>
+            <td><input type="number" class="thuong" data-week="1"></td>
+            <td class="total-cell" id="total-thuong-1">0</td>
+        </tr>
+        <tr>
+            <td class="label-cell">OVT</td>
+            <td><input type="number" class="ovt" data-week="1"></td>
+            <td><input type="number" class="ovt" data-week="1"></td>
+            <td><input type="number" class="ovt" data-week="1"></td>
+            <td><input type="number" class="ovt" data-week="1"></td>
+            <td><input type="number" class="ovt" data-week="1"></td>
+            <td><input type="number" class="ovt" data-week="1"></td>
+            <td><input type="number" class="ovt" data-week="1"></td>
+            <td class="total-cell" id="total-ovt-1">0</td>
+        </tr>
+    </table>
 
-<div id="khuvuc"></div>
+    <table class="summary-table">
+        <tr><td class="summary-header">Thường</td><td id="final-thuong">0</td></tr>
+        <tr><td class="summary-header" style="background-color: #f8cbad;">OVT</td><td id="final-ovt">0</td></tr>
+        <tr><td class="summary-header" style="background-color: #ffd966;">CN</td><td id="final-cn">0</td></tr>
+    </table>
+    <div style="clear: both;"></div>
+</div>
 
 <script>
-function taoBang() {
-  let ten = document.getElementById("ten").value;
-  let luong = parseFloat(document.getElementById("luong").value);
-  let thang = document.getElementById("thang").value;
-  let nam = document.getElementById("nam").value;
-
-  if (!ten || !luong || !thang || !nam) {
-    alert("Nhập đầy đủ!");
-    return;
-  }
-
-  let key = ten + "_" + thang + "_" + nam;
-  let data = JSON.parse(localStorage.getItem(key)) || new Array(31).fill("");
-
-  let html = "<table><tr><th>Ngày</th>";
-  for (let i = 1; i <= 31; i++) {
-    html += "<th>" + i + "</th>";
-  }
-  html += "<th>Tổng công</th><th>Lương</th></tr>";
-
-  html += "<tr><td>" + ten + "</td>";
-
-  for (let i = 0; i < 31; i++) {
-    html += `<td><input class="day" value="${data[i]}" onchange="luu(${i}, this.value)"></td>`;
-  }
-
-  html += `<td id="tong"></td><td id="luongthang"></td></tr></table>`;
-
-  document.getElementById("khuvuc").innerHTML = html;
-
-  function luu(index, value) {
-    data[index] = value;
-    localStorage.setItem(key, JSON.stringify(data));
-    tinh();
-  }
-
-  window.luu = luu;
-
-  function tinh() {
-    let tong = 0;
-    data.forEach(v => {
-      tong += parseFloat(v) || 0;
+    const inputs = document.querySelectorAll('input');
+    
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            calculateTotals();
+        });
     });
 
-    document.getElementById("tong").innerText = tong;
-    document.getElementById("luongthang").innerText = tong * luong;
-  }
+    function calculateTotals() {
+        let grandThuong = 0;
+        let grandOvt = 0;
 
-  tinh();
-}
+        // Tính cho tuần 1 (Boss có thể copy code JS này cho các tuần tiếp theo)
+        let week1Thuong = 0;
+        document.querySelectorAll('.thuong[data-week="1"]').forEach(i => week1Thuong += Number(i.value) || 0);
+        document.getElementById('total-thuong-1').innerText = week1Thuong;
+
+        let week1Ovt = 0;
+        document.querySelectorAll('.ovt[data-week="1"]').forEach(i => week1Ovt += Number(i.value) || 0);
+        document.getElementById('total-ovt-1').innerText = week1Ovt;
+
+        // Cập nhật bảng tổng kết cuối
+        document.getElementById('final-thuong').innerText = week1Thuong; // + các tuần khác
+        document.getElementById('final-ovt').innerText = week1Ovt; // + các tuần khác
+    }
 </script>
 
 </body>
