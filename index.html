@@ -2,66 +2,74 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Bảng Tính Công Linh Hoạt - Boss</title>
+    <title>Hệ Thống Quản Lý Công HVS - Boss</title>
     <style>
         :root { --green-bg: #c6e0b4; --yellow-bg: #ffe699; --orange-bg: #f8cbad; --border-color: #333; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background-color: #f4f7f6; }
-        .container { max-width: 950px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; background-color: #f0f2f5; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         
-        .setup-section { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; gap: 20px; align-items: center; }
-        select, input[type="number"] { padding: 5px; border-radius: 4px; border: 1px solid #ccc; }
+        .setup-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 20px; align-items: center; border: 1px solid #ddd; }
+        select, input { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; }
 
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
-        th, td { border: 1px solid var(--border-color); text-align: center; padding: 5px; overflow: hidden; }
-        .header-green { background-color: var(--green-bg); font-weight: bold; height: 30px; }
-        .label-cell { text-align: left; padding-left: 10px; font-weight: bold; width: 120px; }
-        .total-cell { background-color: #f8f9fa; font-weight: bold; width: 80px; }
-        .day-off { background-color: #fce4ec; } /* Tô màu nhẹ cho CN */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
+        th, td { border: 1px solid var(--border-color); text-align: center; padding: 5px; }
+        .header-green { background-color: var(--green-bg); font-weight: bold; }
+        .label-cell { text-align: left; padding-left: 10px; font-weight: bold; width: 110px; background: #fafafa; }
+        .total-cell { background-color: #eee; font-weight: bold; width: 70px; }
+        .sun-column { background-color: #fff0f0; } /* Màu riêng cho Chủ Nhật */
 
-        input.cell-input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; }
-        .summary-wrapper { display: flex; justify-content: flex-end; gap: 50px; margin-top: 20px; }
-        .salary-table { width: 350px; border: 1px solid #333; }
-        .salary-table td { text-align: right; padding: 8px; }
-        .final-row { background-color: var(--yellow-bg); font-weight: bold; font-size: 1.1em; }
+        input.cell-input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; padding: 5px 0; }
+        input.cell-input:focus { background: #fff9c4; }
+
+        .summary-wrapper { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee; }
+        .salary-table { width: 400px; }
+        .salary-table td { text-align: right; padding: 10px; }
+        .final-row { background-color: var(--yellow-bg); font-weight: bold; font-size: 1.2em; }
+        
+        .btn-save { background-color: #28a745; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-save:hover { background-color: #218838; transform: translateY(-2px); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="text-align: center;">HỆ THỐNG QUẢN LÝ CÔNG TỰ ĐỘNG</h2>
+    <h2 style="text-align: center; color: #1a3a5a;">BẢNG CHẤM CÔNG NHÂN VIÊN - HVS</h2>
 
     <div class="setup-section">
         <div>
-            <label><b>Ngày 1 là:</b></label>
-            <select id="start-day" onchange="renderTables()">
-                <option value="1">Thứ 2</option>
-                <option value="2">Thứ 3</option>
-                <option value="3">Thứ 4</option>
-                <option value="4">Thứ 5</option>
-                <option value="5">Thứ 6</option>
-                <option value="6">Thứ 7</option>
-                <option value="0">Chủ Nhật</option>
+            <label><b>Chọn Tháng:</b></label>
+            <select id="month-select" onchange="renderCalendar()">
+                <option value="0">Tháng 1</option><option value="1">Tháng 2</option>
+                <option value="2">Tháng 3</option><option value="3">Tháng 4</option>
+                <option value="4">Tháng 5</option><option value="5">Tháng 6</option>
+                <option value="6">Tháng 7</option><option value="7">Tháng 8</option>
+                <option value="8">Tháng 9</option><option value="9">Tháng 10</option>
+                <option value="10">Tháng 11</option><option value="11">Tháng 12</option>
             </select>
         </div>
         <div>
-            <label><b>Số ngày trong tháng:</b></label>
-            <input type="number" id="month-days" value="31" min="28" max="31" onchange="renderTables()">
+            <label><b>Năm:</b></label>
+            <input type="number" id="year-select" value="2026" style="width: 80px;" onchange="renderCalendar()">
         </div>
+        <div style="margin-left: auto; font-style: italic; color: #666;">* Tự động cập nhật thứ theo lịch</div>
     </div>
 
-    <div id="main-tables"></div>
+    <div id="calendar-content"></div>
 
     <div class="summary-wrapper">
-        <table style="width: 200px;">
-            <tr><td class="header-green">Thường</td><td id="total-thuong">0</td></tr>
-            <tr><td style="background: var(--orange-bg)">OVT</td><td id="total-ovt">0</td></tr>
-            <tr><td class="header-green">CN</td><td id="total-cn">0</td></tr>
-        </table>
+        <div style="width: 300px;">
+            <table id="final-summary">
+                <tr><td class="label-cell" style="background:var(--green-bg)">Tổng Thường</td><td id="res-thuong" style="font-weight:bold">0</td></tr>
+                <tr><td class="label-cell" style="background:var(--orange-bg)">Tổng OVT</td><td id="res-ovt" style="font-weight:bold">0</td></tr>
+            </table>
+            <button class="btn-save" onclick="saveData()">LƯU DỮ LIỆU NHẬP</button>
+            <p id="save-status" style="color: green; font-size: 13px; margin-top: 5px;"></p>
+        </div>
 
         <table class="salary-table">
-            <tr><td class="label-cell">Lương cơ bản</td><td id="lbl-lcb">11,110,000</td></tr>
-            <tr><td class="label-cell">Thêm giờ (OVT)</td><td id="lbl-ovt">0</td></tr>
-            <tr><td class="label-cell">Phụ cấp (Tổng)</td><td><input type="number" id="in-pc" value="2940000" oninput="calculate()"></td></tr>
+            <tr><td class="label-cell">Lương cơ bản (LCB)</td><td>11,110,000</td></tr>
+            <tr><td class="label-cell">Thêm giờ (OVT)</td><td id="lbl-ovt-money">0</td></tr>
+            <tr><td class="label-cell">Tổng Phụ cấp</td><td><input type="number" id="in-pc" value="2940000" oninput="calculate()"></td></tr>
             <tr><td class="label-cell" style="color:gray">Bảo hiểm (10.5%)</td><td id="lbl-bh" style="color:gray">0</td></tr>
             <tr class="final-row">
                 <td class="label-cell">THỰC NHẬN</td>
@@ -72,94 +80,122 @@
 </div>
 
 <script>
-    const dayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+    const daysOfWeek = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 
-    function renderTables() {
-        const startDay = parseInt(document.getElementById('start-day').value);
-        const totalDays = parseInt(document.getElementById('month-days').value);
-        const container = document.getElementById('main-tables');
+    function renderCalendar() {
+        const month = parseInt(document.getElementById('month-select').value);
+        const year = parseInt(document.getElementById('year-select').value);
+        const container = document.getElementById('calendar-content');
         container.innerHTML = '';
 
-        let currentDayNum = 1;
-        let dayOfWeek = startDay;
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        
+        // Chuyển đổi: JavaScript 0=CN, 1=T2... -> Chúng ta muốn T2 là cột đầu tiên (index 0)
+        let startPos = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
 
-        while (currentDayNum <= totalDays) {
+        let dayCounter = 1;
+        while (dayCounter <= lastDay) {
             let table = document.createElement('table');
-            let rows = { 
-                days: '<tr class="header-green"><td style="width:120px">Thứ</td>',
-                dates: '<tr class="header-green"><td>Ngày</td>',
-                thuong: '<tr><td class="label-cell">Thường</td>',
-                ovt: '<tr><td class="label-cell">OVT</td>'
-            };
+            let headerRow = '<tr class="header-green"><td style="width:110px">Thứ</td>';
+            let dateRow = '<tr class="header-green"><td>Ngày</td>';
+            let thuongRow = '<tr><td class="label-cell">Thường</td>';
+            let ovtRow = '<tr><td class="label-cell">OVT</td>';
 
-            // Tạo từng tuần (7 cột)
             for (let i = 0; i < 7; i++) {
-                if (currentDayNum <= totalDays) {
-                    let displayDay = dayNames[dayOfWeek % 7];
-                    let isCN = (dayOfWeek % 7 === 0);
-                    
-                    rows.days += `<td class="${isCN ? 'day-off' : ''}">${displayDay}</td>`;
-                    rows.dates += `<td>${currentDayNum}</td>`;
-                    rows.thuong += `<td><input type="number" class="in-t" oninput="calculate()"></td>`;
-                    rows.ovt += `<td><input type="number" class="in-o" oninput="calculate()"></td>`;
-                    
-                    currentDayNum++;
-                    dayOfWeek++;
+                let isSun = (i === 6);
+                headerRow += `<td class="${isSun ? 'sun-column' : ''}">${daysOfWeek[i]}</td>`;
+
+                if ((dayCounter === 1 && i < startPos) || dayCounter > lastDay) {
+                    dateRow += `<td></td>`;
+                    thuongRow += `<td></td>`;
+                    ovtRow += `<td></td>`;
                 } else {
-                    rows.days += '<td></td>';
-                    rows.dates += '<td></td>';
-                    rows.thuong += '<td></td>';
-                    rows.ovt += '<td></td>';
+                    dateRow += `<td class="${isSun ? 'sun-column' : ''}">${dayCounter}</td>`;
+                    thuongRow += `<td class="${isSun ? 'sun-column' : ''}"><input type="number" class="cell-input in-t" data-day="${dayCounter}" oninput="calculate()"></td>`;
+                    ovtRow += `<td class="${isSun ? 'sun-column' : ''}"><input type="number" class="cell-input in-o" data-day="${dayCounter}" oninput="calculate()"></td>`;
+                    dayCounter++;
                 }
             }
 
-            rows.days += '<td rowspan="2" class="total-cell">TỔNG</td></tr>';
-            rows.dates += '</tr>';
-            rows.thuong += `<td class="total-cell sum-t-week">0</td></tr>`;
-            rows.ovt += `<td class="total-cell sum-o-week">0</td></tr>`;
+            headerRow += '<td rowspan="2" class="total-cell">TỔNG</td></tr>';
+            dateRow += '</tr>';
+            thuongRow += '<td class="total-cell w-t">0</td></tr>';
+            ovtRow += '<td class="total-cell w-o">0</td></tr>';
 
-            table.innerHTML = rows.days + rows.dates + rows.thuong + rows.ovt;
+            table.innerHTML = headerRow + dateRow + thuongRow + ovtRow;
             container.appendChild(table);
+            startPos = 0; // Chỉ dùng startPos cho tuần đầu tiên
         }
+        loadSavedData();
         calculate();
     }
 
     function calculate() {
-        let grandT = 0, grandO = 0;
-        
-        document.querySelectorAll('table').forEach(table => {
-            if(!table.classList.contains('salary-table')){
-                let weekT = 0, weekO = 0;
-                table.querySelectorAll('.in-t').forEach(input => weekT += Number(input.value) || 0);
-                table.querySelectorAll('.in-o').forEach(input => weekO += Number(input.value) || 0);
-                
-                table.querySelector('.sum-t-week').innerText = weekT;
-                table.querySelector('.sum-o-week').innerText = weekO;
-                
-                grandT += weekT;
-                grandO += weekO;
+        let totalT = 0, totalO = 0;
+        document.querySelectorAll('table').forEach(tbl => {
+            if (tbl.parentElement.id === 'calendar-content') {
+                let wt = 0, wo = 0;
+                tbl.querySelectorAll('.in-t').forEach(i => wt += Number(i.value) || 0);
+                tbl.querySelectorAll('.in-o').forEach(i => wo += Number(i.value) || 0);
+                tbl.querySelector('.w-t').innerText = wt;
+                tbl.querySelector('.w-o').innerText = wo;
+                totalT += wt; totalO += wo;
             }
         });
 
-        // Cập nhật Summary
-        document.getElementById('total-thuong').innerText = grandT;
-        document.getElementById('total-ovt').innerText = grandO;
+        document.getElementById('res-thuong').innerText = totalT;
+        document.getElementById('res-ovt').innerText = totalO;
 
-        // Tính lương
+        // Tính tiền
         const lcb = 11110000;
         const luongGio = Math.round(lcb / 208);
-        const tienOvt = grandO * luongGio * 1.5;
+        const tienOvt = totalO * luongGio * 1.5;
         const pc = Number(document.getElementById('in-pc').value) || 0;
         const bh = lcb * 0.105;
-        const thucNhan = (lcb + tienOvt + pc) - bh;
+        const final = (lcb + tienOvt + pc) - bh;
 
-        document.getElementById('lbl-ovt').innerText = Math.round(tienOvt).toLocaleString();
+        document.getElementById('lbl-ovt-money').innerText = Math.round(tienOvt).toLocaleString();
         document.getElementById('lbl-bh').innerText = Math.round(bh).toLocaleString();
-        document.getElementById('lbl-total').innerText = Math.round(thucNhan).toLocaleString() + " VNĐ";
+        document.getElementById('lbl-total').innerText = Math.round(final).toLocaleString() + " ₫";
     }
 
-    // Chạy lần đầu
-    window.onload = renderTables;
+    function saveData() {
+        const month = document.getElementById('month-select').value;
+        const year = document.getElementById('year-select').value;
+        const data = { thuong: {}, ovt: {} };
+
+        document.querySelectorAll('.in-t').forEach(i => { if(i.dataset.day) data.thuong[i.dataset.day] = i.value });
+        document.querySelectorAll('.in-o').forEach(i => { if(i.dataset.day) data.ovt[i.dataset.day] = i.value });
+
+        const key = `workdata_${year}_${month}`;
+        localStorage.setItem(key, JSON.stringify(data));
+        
+        const status = document.getElementById('save-status');
+        status.innerText = "Đã lưu thành công lúc " + new Date().toLocaleTimeString();
+        setTimeout(() => status.innerText = "", 3000);
+    }
+
+    function loadSavedData() {
+        const month = document.getElementById('month-select').value;
+        const year = document.getElementById('year-select').value;
+        const key = `workdata_${year}_${month}`;
+        const saved = localStorage.getItem(key);
+
+        if (saved) {
+            const data = JSON.parse(saved);
+            document.querySelectorAll('.in-t').forEach(i => { if(data.thuong[i.dataset.day]) i.value = data.thuong[i.dataset.day] });
+            document.querySelectorAll('.in-o').forEach(i => { if(data.ovt[i.dataset.day]) i.value = data.ovt[i.dataset.day] });
+        }
+    }
+
+    // Khởi tạo mặc định theo tháng/năm hiện tại
+    window.onload = () => {
+        const now = new Date();
+        document.getElementById('month-select').value = now.getMonth();
+        document.getElementById('year-select').value = now.getFullYear();
+        renderCalendar();
+    };
 </script>
 
 </body>
