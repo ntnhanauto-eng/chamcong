@@ -3,65 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HVS Payroll Compact - Boss</title>
+    <title>HVS Mobile - Boss</title>
     <style>
-        :root { --green-bg: #c6e0b4; --yellow-bg: #ffe699; --orange-bg: #f8cbad; --border-color: #444; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 5px; background-color: #f0f2f5; font-size: 12px; }
-        .container { max-width: 100%; margin: auto; background: white; padding: 10px; border-radius: 8px; }
+        :root { --green-bg: #c6e0b4; --yellow-bg: #ffe699; --orange-bg: #f8cbad; --border-color: #333; }
         
-        h2 { text-align: center; margin: 5px 0; font-size: 1rem; color: #1a3a5a; text-transform: uppercase; }
-        .setup-section { background: #f8f9fa; padding: 5px; border-radius: 4px; margin-bottom: 10px; display: flex; gap: 5px; border: 1px solid #ddd; }
-        select, input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 14px; }
-
-        .table-responsive { width: 100%; overflow-x: auto; margin-bottom: 10px; border: 1px solid var(--border-color); }
-        table { width: 100%; min-width: 380px; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 1px solid var(--border-color); text-align: center; padding: 2px 0; height: 30px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 10px; background-color: #f0f2f5; font-size: 14px; }
+        .container { max-width: 100%; margin: auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
-        .header-green { background-color: var(--green-bg); font-weight: bold; font-size: 10px; }
-        .label-cell { text-align: left; padding-left: 4px; font-weight: bold; width: 60px; background: #fafafa; font-size: 11px; }
-        .day-col { width: 38px; } /* Độ rộng cố định cho các cột ngày */
-        .total-header { background-color: #eee; font-weight: bold; width: 45px; font-size: 9px; }
-        .total-val { background-color: #f9f9f9; font-weight: bold; font-size: 13px; }
-        .sun-column { background-color: #fff0f0; color: red; }
+        h2 { text-align: center; font-size: 1.2rem; color: #1a3a5a; margin-bottom: 15px; }
 
-        input.cell-input { width: 100%; border: none; text-align: center; font-size: 16px; outline: none; background: transparent; font-weight: bold; padding: 0; }
+        .setup-section { background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px; border: 1px solid #ddd; }
+        .setup-item { display: flex; align-items: center; gap: 5px; flex: 1; min-width: 140px; }
+        
+        select, input { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; width: 100%; }
 
-        .summary-wrapper { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; border-top: 2px solid #eee; padding-top: 10px; }
+        /* Khung cuộn ngang cho bảng trên Mobile */
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        
+        table { width: 600px; border-collapse: collapse; table-layout: fixed; background: white; }
+        th, td { border: 1px solid var(--border-color); text-align: center; padding: 8px 4px; }
+        
+        .header-green { background-color: var(--green-bg); font-weight: bold; }
+        .label-cell { text-align: left; padding-left: 10px; font-weight: bold; width: 100px; background: #fafafa; position: sticky; left: 0; z-index: 10; border-right: 2px solid #333; }
+        .total-cell { background-color: #eee; font-weight: bold; width: 60px; position: sticky; right: 0; background: #eee; border-left: 2px solid #333; }
+        .sun-column { background-color: #fff0f0; }
+
+        input.cell-input { width: 100%; border: none; text-align: center; font-size: 18px; outline: none; background: transparent; padding: 5px 0; font-weight: bold; }
+
+        /* Phần lương bên dưới */
+        .summary-wrapper { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee; }
         .salary-table { width: 100%; border: 1px solid var(--border-color); }
-        .salary-table input { border: none; text-align: right; font-weight: bold; font-size: 14px; background: #fffdf0; width: 100%; padding: 4px; box-sizing: border-box; }
-        .salary-table td { padding: 6px; border: 1px solid #ddd; }
+        .salary-table input { border: none; text-align: right; font-weight: bold; font-size: 16px; background: #fffdf0; color: #000; padding: 5px; width: 100%; box-sizing: border-box; }
+        .salary-table td { text-align: right; padding: 10px; }
+        .salary-table .label-cell { text-align: left; width: 160px; position: static; }
         
-        .btn-save { background-color: #28a745; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; }
-        .final-row { background-color: var(--yellow-bg); font-weight: bold; font-size: 1.1em; }
+        .final-row { background-color: var(--yellow-bg); font-weight: bold; font-size: 1.2em; }
+        
+        .btn-save { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 8px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; }
+        #save-status { color: green; font-size: 14px; text-align: center; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>HVS - QUẢN LÝ CÔNG</h2>
+    <h2>CHẤM CÔNG & LƯƠNG HVS</h2>
 
     <div class="setup-section">
-        <select id="month-select" onchange="renderCalendar()" style="flex:2"></select>
-        <input type="number" id="year-select" value="2026" onchange="renderCalendar()" style="flex:1">
+        <div class="setup-item">
+            <label>Tháng:</label>
+            <select id="month-select" onchange="renderCalendar()"></select>
+        </div>
+        <div class="setup-item">
+            <label>Năm:</label>
+            <input type="number" id="year-select" value="2026" onchange="renderCalendar()">
+        </div>
     </div>
 
     <div id="calendar-content"></div>
 
     <div class="summary-wrapper">
-        <button class="btn-save" onclick="saveData()">LƯU DỮ LIỆU</button>
-        
-        <table style="width: 100%;">
-            <tr><td class="label-cell" style="background:var(--green-bg)">TỔNG THƯỜNG</td><td id="res-thuong" style="font-weight:bold; text-align:right; padding-right:10px">0</td></tr>
-            <tr><td class="label-cell" style="background:var(--orange-bg)">TỔNG OVT</td><td id="res-ovt" style="font-weight:bold; text-align:right; padding-right:10px">0</td></tr>
-            <tr><td class="label-cell" style="background:var(--yellow-bg)">TỔNG CN</td><td id="res-cn" style="font-weight:bold; text-align:right; padding-right:10px">0</td></tr>
-        </table>
+        <div style="width: 100%;">
+            <table style="width: 100%; margin-bottom: 10px;">
+                <tr><td class="label-cell" style="background:var(--green-bg)">Tổng Thường</td><td id="res-thuong" style="font-weight:bold; text-align:right; padding-right:15px">0</td></tr>
+                <tr><td class="label-cell" style="background:var(--orange-bg)">Tổng OVT</td><td id="res-ovt" style="font-weight:bold; text-align:right; padding-right:15px">0</td></tr>
+            </table>
+            <button class="btn-save" onclick="saveData()">LƯU DỮ LIỆU</button>
+            <p id="save-status"></p>
+        </div>
 
         <table class="salary-table">
             <tr><td class="label-cell">LCB</td><td><input type="number" id="in-lcb" value="11110000" oninput="calculate()"></td></tr>
-            <tr><td class="label-cell">PC Chức vụ</td><td><input type="number" id="in-pc-chucvu" value="1600000" oninput="calculate()"></td></tr>
-            <tr><td class="label-cell">PC C.Việc</td><td><input type="number" id="in-pc-congviec" value="750000" oninput="calculate()"></td></tr>
-            <tr><td class="label-cell">PC Thâm niên</td><td><input type="number" id="in-pc-thamnien" value="590000" oninput="calculate()"></td></tr>
-            <tr><td class="label-cell" style="font-size:0.85em; color:#666">Bảo hiểm (10.5%)</td><td id="lbl-bh" style="color:#666">0</td></tr>
+            <tr><td class="label-cell">Lương giờ</td><td id="lbl-luong-gio">0</td></tr>
+            <tr><td class="label-cell">Thêm giờ (OVT)</td><td id="lbl-ovt-money">0</td></tr>
+            <tr><td class="label-cell">PC chức vụ</td><td><input type="number" id="in-pc-chucvu" value="1600000" oninput="calculate()"></td></tr>
+            <tr><td class="label-cell">PC công việc</td><td><input type="number" id="in-pc-congviec" value="750000" oninput="calculate()"></td></tr>
+            <tr><td class="label-cell">PC thâm niên</td><td><input type="number" id="in-pc-thamnien" value="590000" oninput="calculate()"></td></tr>
+            <tr><td class="label-cell">BHXH (8%)</td><td id="lbl-bhxh">0</td></tr>
+            <tr><td class="label-cell">BHYT (1.5%)</td><td id="lbl-bhyt">0</td></tr>
+            <tr><td class="label-cell">BHTN (1%)</td><td id="lbl-bhtn">0</td></tr>
             <tr class="final-row">
                 <td class="label-cell">THỰC NHẬN</td>
                 <td id="lbl-total" style="color: #d9534f;">0</td>
@@ -80,7 +99,8 @@
             opt.value = i; opt.text = "Tháng " + (i+1);
             monthSel.add(opt);
         }
-        monthSel.value = new Date().getMonth();
+        const now = new Date();
+        monthSel.value = now.getMonth();
         renderCalendar();
     }
 
@@ -99,39 +119,26 @@
             let wrap = document.createElement('div');
             wrap.className = 'table-responsive';
             let table = document.createElement('table');
-            
-            let hRow = `<tr><td class="label-cell header-green">Thứ</td>`, 
-                dRow = `<tr><td class="label-cell header-green">Ngày</td>`, 
+            let hRow = `<tr class="header-green"><td class="label-cell">Thứ</td>`, 
+                dRow = `<tr class="header-green"><td class="label-cell">Ngày</td>`, 
                 tRow = `<tr><td class="label-cell">Thường</td>`, 
-                oRow = `<tr><td class="label-cell">OVT</td>`,
-                cRow = `<tr><td class="label-cell">CN</td>`;
+                oRow = `<tr><td class="label-cell">OVT</td>`;
             
             for (let i = 0; i < 7; i++) {
                 let isSun = (i === 6);
-                hRow += `<td class="day-col header-green ${isSun ? 'sun-column' : ''}">${daysOfWeek[i]}</td>`;
+                hRow += `<td class="${isSun ? 'sun-column' : ''}">${daysOfWeek[i]}</td>`;
                 if ((dayCounter === 1 && i < startPos) || dayCounter > lastDay) {
-                    dRow += '<td class="day-col"></td>'; tRow += '<td></td>'; oRow += '<td></td>'; cRow += '<td></td>';
+                    dRow += '<td></td>'; tRow += '<td></td>'; oRow += '<td></td>';
                 } else {
-                    dRow += `<td class="day-col header-green ${isSun ? 'sun-column' : ''}">${dayCounter}</td>`;
-                    if (isSun) {
-                        tRow += `<td class="sun-column"></td>`;
-                        oRow += `<td class="sun-column"></td>`;
-                        cRow += `<td class="sun-column"><input type="number" class="cell-input in-c" data-day="${dayCounter}" oninput="calculate()"></td>`;
-                    } else {
-                        tRow += `<td><input type="number" class="cell-input in-t" data-day="${dayCounter}" oninput="calculate()"></td>`;
-                        oRow += `<td><input type="number" class="cell-input in-o" data-day="${dayCounter}" oninput="calculate()"></td>`;
-                        cRow += `<td></td>`;
-                    }
+                    dRow += `<td class="${isSun ? 'sun-column' : ''}">${dayCounter}</td>`;
+                    tRow += `<td class="${isSun ? 'sun-column' : ''}"><input type="number" class="cell-input in-t" data-day="${dayCounter}" oninput="calculate()"></td>`;
+                    oRow += `<td class="${isSun ? 'sun-column' : ''}"><input type="number" class="cell-input in-o" data-day="${dayCounter}" oninput="calculate()"></td>`;
                     dayCounter++;
                 }
             }
-            hRow += '<td class="total-header">TỔNG</td></tr>';
-            dRow += '<td class="header-green" style="font-size:9px">TUẦN</td></tr>';
-            tRow += '<td class="total-val w-t">0</td></tr>';
-            oRow += '<td class="total-val w-o">0</td></tr>';
-            cRow += '<td class="total-val w-c">0</td></tr>';
-            
-            table.innerHTML = hRow + dRow + tRow + oRow + cRow;
+            hRow += '<td class="total-cell">TỔNG</td></tr>'; dRow += '<td></td></tr>';
+            tRow += '<td class="total-cell w-t">0</td></tr>'; oRow += '<td class="total-cell w-o">0</td></tr>';
+            table.innerHTML = hRow + dRow + tRow + oRow;
             wrap.appendChild(table);
             container.appendChild(wrap);
             startPos = 0;
@@ -140,59 +147,75 @@
     }
 
     function calculate() {
-        let tT = 0, tO = 0, tC = 0;
+        let totalT = 0, totalO = 0;
+        document.querySelectorAll('.in-t').forEach(i => totalT += Number(i.value) || 0);
+        document.querySelectorAll('.in-o').forEach(i => totalO += Number(i.value) || 0);
+        
         document.querySelectorAll('table').forEach(tbl => {
             if(tbl.parentElement.className === 'table-responsive') {
-                let wt = 0, wo = 0, wc = 0;
+                let wt = 0, wo = 0;
                 tbl.querySelectorAll('.in-t').forEach(i => wt += Number(i.value) || 0);
                 tbl.querySelectorAll('.in-o').forEach(i => wo += Number(i.value) || 0);
-                tbl.querySelectorAll('.in-c').forEach(i => wc += Number(i.value) || 0);
-                tbl.querySelector('.w-t').innerText = wt || '';
-                tbl.querySelector('.w-o').innerText = wo || '';
-                tbl.querySelector('.w-c').innerText = wc || '';
-                tT += wt; tO += wo; tC += wc;
+                tbl.querySelector('.w-t').innerText = wt;
+                tbl.querySelector('.w-o').innerText = wo;
             }
         });
-        document.getElementById('res-thuong').innerText = tT;
-        document.getElementById('res-ovt').innerText = tO;
-        document.getElementById('res-cn').innerText = tC;
+
+        document.getElementById('res-thuong').innerText = totalT;
+        document.getElementById('res-ovt').innerText = totalO;
 
         const lcb = Number(document.getElementById('in-lcb').value) || 0;
-        const pc = (Number(document.getElementById('in-pc-chucvu').value) || 0) + (Number(document.getElementById('in-pc-congviec').value) || 0) + (Number(document.getElementById('in-pc-thamnien').value) || 0);
-        const lGio = Math.round(lcb / 208);
-        const tOvt = Math.round((tO * 1.5 + tC * 2.0) * lGio);
-        const bh = Math.round(lcb * 0.105);
-        document.getElementById('lbl-bh').innerText = bh.toLocaleString();
-        document.getElementById('lbl-total').innerText = (lcb + pc + tOvt - bh).toLocaleString() + " ₫";
+        const pccv = Number(document.getElementById('in-pc-chucvu').value) || 0;
+        const pctn = Number(document.getElementById('in-pc-thamnien').value) || 0;
+        const pccviec = Number(document.getElementById('in-pc-congviec').value) || 0;
+
+        const luongGio = Math.round(lcb / 208);
+        const tienOvt = Math.round(totalO * luongGio * 1.5);
+        
+        const bhxh = Math.round(lcb * 0.08);
+        const bhyt = Math.round(lcb * 0.015);
+        const bhtn = Math.round(lcb * 0.01);
+
+        const final = (lcb + tienOvt + pccv + pctn + pccviec) - (bhxh + bhyt + bhtn);
+
+        document.getElementById('lbl-luong-gio').innerText = luongGio.toLocaleString();
+        document.getElementById('lbl-ovt-money').innerText = tienOvt.toLocaleString();
+        document.getElementById('lbl-bhxh').innerText = bhxh.toLocaleString();
+        document.getElementById('lbl-bhyt').innerText = bhyt.toLocaleString();
+        document.getElementById('lbl-bhtn').innerText = bhtn.toLocaleString();
+        document.getElementById('lbl-total').innerText = final.toLocaleString() + " ₫";
     }
 
     function saveData() {
-        const m = document.getElementById('month-select').value, y = document.getElementById('year-select').value;
-        const d = { t: {}, o: {}, c: {}, s: {} };
-        document.querySelectorAll('.in-t').forEach(i => d.t[i.dataset.day] = i.value);
-        document.querySelectorAll('.in-o').forEach(i => d.o[i.dataset.day] = i.value);
-        document.querySelectorAll('.in-c').forEach(i => d.c[i.dataset.day] = i.value);
-        d.s = { lcb: document.getElementById('in-lcb').value, pccv: document.getElementById('in-pc-chucvu').value, pccv2: document.getElementById('in-pc-congviec').value, pctn: document.getElementById('in-pc-thamnien').value };
-        localStorage.setItem(`hvs_${y}_${m}`, JSON.stringify(d));
-        alert("Đã lưu dữ liệu cho Boss!");
+        const month = document.getElementById('month-select').value;
+        const year = document.getElementById('year-select').value;
+        const data = { thuong: {}, ovt: {}, salary: {} };
+        document.querySelectorAll('.in-t').forEach(i => { if(i.dataset.day) data.thuong[i.dataset.day] = i.value });
+        document.querySelectorAll('.in-o').forEach(i => { if(i.dataset.day) data.ovt[i.dataset.day] = i.value });
+        data.salary = { lcb: document.getElementById('in-lcb').value, pccv: document.getElementById('in-pc-chucvu').value, pccviec: document.getElementById('in-pc-congviec').value, pctn: document.getElementById('in-pc-thamnien').value };
+        localStorage.setItem(`hvs_data_${year}_${month}`, JSON.stringify(data));
+        const status = document.getElementById('save-status');
+        status.innerText = "✔ Đã lưu thành công!";
+        setTimeout(() => status.innerText = "", 3000);
     }
 
     function loadSavedData() {
-        const m = document.getElementById('month-select').value, y = document.getElementById('year-select').value;
-        const s = localStorage.getItem(`hvs_${y}_${m}`);
-        if (s) {
-            const d = JSON.parse(s);
-            document.querySelectorAll('.in-t').forEach(i => i.value = d.t[i.dataset.day] || '');
-            document.querySelectorAll('.in-o').forEach(i => i.value = d.o[i.dataset.day] || '');
-            document.querySelectorAll('.in-c').forEach(i => i.value = d.c[i.dataset.day] || '');
-            if(d.s) {
-                document.getElementById('in-lcb').value = d.s.lcb;
-                document.getElementById('in-pc-chucvu').value = d.s.pccv;
-                document.getElementById('in-pc-congviec').value = d.s.pccv2;
-                document.getElementById('in-pc-thamnien').value = d.s.pctn;
+        const month = document.getElementById('month-select').value;
+        const year = document.getElementById('year-select').value;
+        const saved = localStorage.getItem(`hvs_data_${year}_${month}`);
+        if (saved) {
+            const data = JSON.parse(saved);
+            document.querySelectorAll('.in-t').forEach(i => { if(data.thuong[i.dataset.day]) i.value = data.thuong[i.dataset.day] });
+            document.querySelectorAll('.in-o').forEach(i => { if(data.ovt[i.dataset.day]) i.value = data.ovt[i.dataset.day] });
+            if(data.salary) {
+                document.getElementById('in-lcb').value = data.salary.lcb;
+                document.getElementById('in-pc-chucvu').value = data.salary.pccv;
+                document.getElementById('in-pc-congviec').value = data.salary.pccviec;
+                document.getElementById('in-pc-thamnien').value = data.salary.pctn;
             }
         }
     }
+
     window.onload = init;
 </script>
 </body>
