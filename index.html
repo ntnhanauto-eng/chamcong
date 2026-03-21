@@ -2,180 +2,164 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Tính Công & Lương - Boss</title>
+    <title>Bảng Tính Công Linh Hoạt - Boss</title>
     <style>
-        :root {
-            --green-bg: #c6e0b4;
-            --yellow-bg: #ffe699;
-            --orange-bg: #f8cbad;
-            --border-color: #333;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f0f2f5; color: #333; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; text-transform: uppercase; color: #2c3e50; margin-bottom: 25px; border-bottom: 2px solid var(--green-bg); pb: 10px; }
+        :root { --green-bg: #c6e0b4; --yellow-bg: #ffe699; --orange-bg: #f8cbad; --border-color: #333; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background-color: #f4f7f6; }
+        .container { max-width: 950px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 14px; }
-        th, td { border: 1px solid var(--border-color); padding: 6px; text-align: center; }
-        
-        .header-green { background-color: var(--green-bg); font-weight: bold; }
-        .label-cell { text-align: left; padding-left: 15px; font-weight: 600; width: 150px; }
-        .total-cell { background-color: #f9f9f9; font-weight: bold; width: 80px; }
-        
-        input[type="number"] {
-            width: 100%; border: none; text-align: center; font-size: 15px; background: transparent; outline: none;
-        }
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .setup-section { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; gap: 20px; align-items: center; }
+        select, input[type="number"] { padding: 5px; border-radius: 4px; border: 1px solid #ccc; }
 
-        /* Bảng tổng kết bên phải */
-        .summary-wrapper { display: flex; justify-content: flex-end; margin-top: 10px; }
-        .summary-table { width: 250px; }
-        
-        /* Phần chi tiết lương bên dưới */
-        .salary-section { margin-top: 30px; border-top: 2px dashed #ccc; pt: 20px; }
-        .salary-table { width: 350px; margin: 0; }
-        .salary-table td { text-align: right; padding: 8px 15px; }
-        .salary-table .label-cell { text-align: left; }
-        .final-row { background-color: #fff2cc; font-size: 1.1em; }
-        .text-bold { font-weight: bold; }
-        .text-red { color: #d9534f; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        th, td { border: 1px solid var(--border-color); text-align: center; padding: 5px; overflow: hidden; }
+        .header-green { background-color: var(--green-bg); font-weight: bold; height: 30px; }
+        .label-cell { text-align: left; padding-left: 10px; font-weight: bold; width: 120px; }
+        .total-cell { background-color: #f8f9fa; font-weight: bold; width: 80px; }
+        .day-off { background-color: #fce4ec; } /* Tô màu nhẹ cho CN */
 
-        @media print {
-            .container { box-shadow: none; border: none; }
-            input { border: none; }
-        }
+        input.cell-input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; }
+        .summary-wrapper { display: flex; justify-content: flex-end; gap: 50px; margin-top: 20px; }
+        .salary-table { width: 350px; border: 1px solid #333; }
+        .salary-table td { text-align: right; padding: 8px; }
+        .final-row { background-color: var(--yellow-bg); font-weight: bold; font-size: 1.1em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Bảng Nhập Công & Chi Tiết Lương</h2>
+    <h2 style="text-align: center;">HỆ THỐNG QUẢN LÝ CÔNG TỰ ĐỘNG</h2>
 
-    <div id="tables-container">
+    <div class="setup-section">
+        <div>
+            <label><b>Ngày 1 là:</b></label>
+            <select id="start-day" onchange="renderTables()">
+                <option value="1">Thứ 2</option>
+                <option value="2">Thứ 3</option>
+                <option value="3">Thứ 4</option>
+                <option value="4">Thứ 5</option>
+                <option value="5">Thứ 6</option>
+                <option value="6">Thứ 7</option>
+                <option value="0">Chủ Nhật</option>
+            </select>
         </div>
-
-    <div class="summary-wrapper">
-        <table class="summary-table">
-            <tr><td class="label-cell" style="background: var(--yellow-bg)">Thường</td><td id="final-thuong" class="text-bold">0</td></tr>
-            <tr><td class="label-cell" style="background: var(--orange-bg)">OVT</td><td id="final-ovt" class="text-bold">0</td></tr>
-            <tr><td class="label-cell" style="background: var(--yellow-bg)">CN</td><td id="final-cn" class="text-bold">0</td></tr>
-        </table>
+        <div>
+            <label><b>Số ngày trong tháng:</b></label>
+            <input type="number" id="month-days" value="31" min="28" max="31" onchange="renderTables()">
+        </div>
     </div>
 
-    <div class="salary-section">
+    <div id="main-tables"></div>
+
+    <div class="summary-wrapper">
+        <table style="width: 200px;">
+            <tr><td class="header-green">Thường</td><td id="total-thuong">0</td></tr>
+            <tr><td style="background: var(--orange-bg)">OVT</td><td id="total-ovt">0</td></tr>
+            <tr><td class="header-green">CN</td><td id="total-cn">0</td></tr>
+        </table>
+
         <table class="salary-table">
-            <tr><td class="label-cell">LCB</td><td id="val-lcb" class="text-bold">11,110,000</td></tr>
-            <tr><td class="label-cell">Lương giờ</td><td id="val-luong-gio">53,413</td></tr>
-            <tr><td class="label-cell">Thêm giờ (OVT x1.5)</td><td id="val-them-gio" class="text-bold">0</td></tr>
-            <tr><td class="label-cell">PC chức vụ</td><td><input type="number" id="pc-chuc-vu" value="1600000" oninput="calculateAll()"></td></tr>
-            <tr><td class="label-cell">PC công việc</td><td><input type="number" id="pc-cong-viec" value="750000" oninput="calculateAll()"></td></tr>
-            <tr><td class="label-cell">PC thâm niên</td><td><input type="number" id="pc-tham-nien" value="590000" oninput="calculateAll()"></td></tr>
-            <tr style="border: none;"><td colspan="2" style="border: none; height: 15px;"></td></tr>
-            <tr><td class="label-cell">BHXH (8%)</td><td id="val-bhxh" style="color: #777;">0</td></tr>
-            <tr><td class="label-cell">BHYT (1.5%)</td><td id="val-bhyt" style="color: #777;">0</td></tr>
-            <tr><td class="label-cell">BHTN (1%)</td><td id="val-bhtn" style="color: #777;">0</td></tr>
-            <tr style="border: none;"><td colspan="2" style="border: none; height: 15px;"></td></tr>
+            <tr><td class="label-cell">Lương cơ bản</td><td id="lbl-lcb">11,110,000</td></tr>
+            <tr><td class="label-cell">Thêm giờ (OVT)</td><td id="lbl-ovt">0</td></tr>
+            <tr><td class="label-cell">Phụ cấp (Tổng)</td><td><input type="number" id="in-pc" value="2940000" oninput="calculate()"></td></tr>
+            <tr><td class="label-cell" style="color:gray">Bảo hiểm (10.5%)</td><td id="lbl-bh" style="color:gray">0</td></tr>
             <tr class="final-row">
-                <td class="label-cell text-bold">Thực nhận</td>
-                <td id="val-thuc-nhan" class="text-red">0</td>
+                <td class="label-cell">THỰC NHẬN</td>
+                <td id="lbl-total" style="color: #d9534f;">0</td>
             </tr>
         </table>
     </div>
 </div>
 
 <script>
-    const daysInMonth = 31;
-    const lcb = 11110000;
-    const gioChuanThang = 208; // 26 ngày * 8 tiếng
+    const dayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
-    // Khởi tạo bảng 5 tuần
-    function initTables() {
-        const container = document.getElementById('tables-container');
-        let dayCounter = 1;
-        
-        for (let w = 1; w <= 5; w++) {
-            let tableHtml = `<table><tr class="header-green"><td style="width:150px"></td><td>CN</td><td></td><td></td><td></td><td></td><td></td><td>T7</td><td rowspan="2" class="total-cell">TỔNG</td></tr><tr class="header-green"><td>Ngày</td>`;
-            
+    function renderTables() {
+        const startDay = parseInt(document.getElementById('start-day').value);
+        const totalDays = parseInt(document.getElementById('month-days').value);
+        const container = document.getElementById('main-tables');
+        container.innerHTML = '';
+
+        let currentDayNum = 1;
+        let dayOfWeek = startDay;
+
+        while (currentDayNum <= totalDays) {
+            let table = document.createElement('table');
+            let rows = { 
+                days: '<tr class="header-green"><td style="width:120px">Thứ</td>',
+                dates: '<tr class="header-green"><td>Ngày</td>',
+                thuong: '<tr><td class="label-cell">Thường</td>',
+                ovt: '<tr><td class="label-cell">OVT</td>'
+            };
+
+            // Tạo từng tuần (7 cột)
             for (let i = 0; i < 7; i++) {
-                tableHtml += `<td>${dayCounter <= daysInMonth ? dayCounter : ''}</td>`;
-                dayCounter++;
+                if (currentDayNum <= totalDays) {
+                    let displayDay = dayNames[dayOfWeek % 7];
+                    let isCN = (dayOfWeek % 7 === 0);
+                    
+                    rows.days += `<td class="${isCN ? 'day-off' : ''}">${displayDay}</td>`;
+                    rows.dates += `<td>${currentDayNum}</td>`;
+                    rows.thuong += `<td><input type="number" class="in-t" oninput="calculate()"></td>`;
+                    rows.ovt += `<td><input type="number" class="in-o" oninput="calculate()"></td>`;
+                    
+                    currentDayNum++;
+                    dayOfWeek++;
+                } else {
+                    rows.days += '<td></td>';
+                    rows.dates += '<td></td>';
+                    rows.thuong += '<td></td>';
+                    rows.ovt += '<td></td>';
+                }
             }
-            dayCounter -= 7; // Reset để điền input
-            
-            tableHtml += `</tr><tr><td class="label-cell">Thường</td>`;
-            for (let i = 0; i < 7; i++) {
-                tableHtml += `<td>${dayCounter <= daysInMonth ? `<input type="number" class="thuong" oninput="calculateAll()">` : ''}</td>`;
-                dayCounter++;
-            }
-            tableHtml += `<td id="sum-thuong-w${w}" class="total-cell">0</td></tr>`;
-            
-            dayCounter -= 7;
-            tableHtml += `<tr><td class="label-cell">OVT</td>`;
-            for (let i = 0; i < 7; i++) {
-                tableHtml += `<td>${dayCounter <= daysInMonth ? `<input type="number" class="ovt" oninput="calculateAll()">` : ''}</td>`;
-                dayCounter++;
-            }
-            tableHtml += `<td id="sum-ovt-w${w}" class="total-cell">0</td></tr></table>`;
-            
-            container.innerHTML += tableHtml;
-            if (dayCounter > daysInMonth) break;
+
+            rows.days += '<td rowspan="2" class="total-cell">TỔNG</td></tr>';
+            rows.dates += '</tr>';
+            rows.thuong += `<td class="total-cell sum-t-week">0</td></tr>`;
+            rows.ovt += `<td class="total-cell sum-o-week">0</td></tr>`;
+
+            table.innerHTML = rows.days + rows.dates + rows.thuong + rows.ovt;
+            container.appendChild(table);
         }
+        calculate();
     }
 
-    function calculateAll() {
-        let grandThuong = 0;
-        let grandOvt = 0;
-
-        // Tính tổng từng tuần
-        for (let w = 1; w <= 5; w++) {
-            let weekThuong = 0;
-            let weekOvt = 0;
-            const table = document.getElementsByTagName('table')[w-1];
-            if(!table) continue;
-
-            table.querySelectorAll('.thuong').forEach(input => weekThuong += Number(input.value) || 0);
-            table.querySelectorAll('.ovt').forEach(input => weekOvt += Number(input.value) || 0);
-            
-            const st = document.getElementById(`sum-thuong-w${w}`);
-            const so = document.getElementById(`sum-ovt-w${w}`);
-            if(st) st.innerText = weekThuong;
-            if(so) so.innerText = weekOvt;
-
-            grandThuong += weekThuong;
-            grandOvt += weekOvt;
-        }
-
-        // Cập nhật bảng tổng kết
-        document.getElementById('final-thuong').innerText = grandThuong;
-        document.getElementById('final-ovt').innerText = grandOvt;
-
-        // Logic tính lương
-        const luongGio = Math.round(lcb / gioChuanThang);
-        const tienOvt = Math.round(grandOvt * luongGio * 1.5);
+    function calculate() {
+        let grandT = 0, grandO = 0;
         
-        const pcChucVu = Number(document.getElementById('pc-chuc-vu').value) || 0;
-        const pcCongViec = Number(document.getElementById('pc-cong-viec').value) || 0;
-        const pcThamNien = Number(document.getElementById('pc-tham-nien').value) || 0;
+        document.querySelectorAll('table').forEach(table => {
+            if(!table.classList.contains('salary-table')){
+                let weekT = 0, weekO = 0;
+                table.querySelectorAll('.in-t').forEach(input => weekT += Number(input.value) || 0);
+                table.querySelectorAll('.in-o').forEach(input => weekO += Number(input.value) || 0);
+                
+                table.querySelector('.sum-t-week').innerText = weekT;
+                table.querySelector('.sum-o-week').innerText = weekO;
+                
+                grandT += weekT;
+                grandO += weekO;
+            }
+        });
 
-        const bhxh = Math.round(lcb * 0.08);
-        const bhyt = Math.round(lcb * 0.015);
-        const bhtn = Math.round(lcb * 0.01);
+        // Cập nhật Summary
+        document.getElementById('total-thuong').innerText = grandT;
+        document.getElementById('total-ovt').innerText = grandO;
 
-        const thucNhan = (lcb + tienOvt + pcChucVu + pcCongViec + pcThamNien) - (bhxh + bhyt + bhtn);
+        // Tính lương
+        const lcb = 11110000;
+        const luongGio = Math.round(lcb / 208);
+        const tienOvt = grandO * luongGio * 1.5;
+        const pc = Number(document.getElementById('in-pc').value) || 0;
+        const bh = lcb * 0.105;
+        const thucNhan = (lcb + tienOvt + pc) - bh;
 
-        // Hiển thị số liệu định dạng VNĐ
-        document.getElementById('val-luong-gio').innerText = luongGio.toLocaleString();
-        document.getElementById('val-them-gio').innerText = tienOvt.toLocaleString();
-        document.getElementById('val-bhxh').innerText = bhxh.toLocaleString();
-        document.getElementById('val-bhyt').innerText = bhyt.toLocaleString();
-        document.getElementById('val-bhtn').innerText = bhtn.toLocaleString();
-        document.getElementById('val-thuc-nhan').innerText = thucNhan.toLocaleString() + " ₫";
+        document.getElementById('lbl-ovt').innerText = Math.round(tienOvt).toLocaleString();
+        document.getElementById('lbl-bh').innerText = Math.round(bh).toLocaleString();
+        document.getElementById('lbl-total').innerText = Math.round(thucNhan).toLocaleString() + " VNĐ";
     }
 
-    window.onload = () => {
-        initTables();
-        calculateAll();
-    };
+    // Chạy lần đầu
+    window.onload = renderTables;
 </script>
 
 </body>
