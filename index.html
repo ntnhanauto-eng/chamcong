@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Bảng chấm công tháng</title>
+
+<style>
+body { font-family: Arial; padding: 20px; }
+input, button { padding: 5px; margin: 5px; }
+
+table {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
+}
+th {
+  background: #eee;
+}
+input.day {
+  width: 40px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Bảng chấm công</h2>
+
+<input id="ten" placeholder="Tên nhân viên">
+<input id="luong" type="number" placeholder="Lương/ngày">
+<input id="thang" type="number" placeholder="Tháng (1-12)">
+<input id="nam" type="number" placeholder="Năm">
+<button onclick="taoBang()">Tạo bảng</button>
+
+<div id="khuvuc"></div>
+
+<script>
+function taoBang() {
+  let ten = document.getElementById("ten").value;
+  let luong = parseFloat(document.getElementById("luong").value);
+  let thang = document.getElementById("thang").value;
+  let nam = document.getElementById("nam").value;
+
+  if (!ten || !luong || !thang || !nam) {
+    alert("Nhập đầy đủ!");
+    return;
+  }
+
+  let key = ten + "_" + thang + "_" + nam;
+  let data = JSON.parse(localStorage.getItem(key)) || new Array(31).fill("");
+
+  let html = "<table><tr><th>Ngày</th>";
+  for (let i = 1; i <= 31; i++) {
+    html += "<th>" + i + "</th>";
+  }
+  html += "<th>Tổng công</th><th>Lương</th></tr>";
+
+  html += "<tr><td>" + ten + "</td>";
+
+  for (let i = 0; i < 31; i++) {
+    html += `<td><input class="day" value="${data[i]}" onchange="luu(${i}, this.value)"></td>`;
+  }
+
+  html += `<td id="tong"></td><td id="luongthang"></td></tr></table>`;
+
+  document.getElementById("khuvuc").innerHTML = html;
+
+  function luu(index, value) {
+    data[index] = value;
+    localStorage.setItem(key, JSON.stringify(data));
+    tinh();
+  }
+
+  window.luu = luu;
+
+  function tinh() {
+    let tong = 0;
+    data.forEach(v => {
+      tong += parseFloat(v) || 0;
+    });
+
+    document.getElementById("tong").innerText = tong;
+    document.getElementById("luongthang").innerText = tong * luong;
+  }
+
+  tinh();
+}
+</script>
+
+</body>
+</html>
