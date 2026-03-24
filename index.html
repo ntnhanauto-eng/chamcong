@@ -307,6 +307,7 @@ function init() {
     if (savedName) document.getElementById('user-name').value = savedName;
     renderTodayInfo(); // ✅ THÊM DÒNG NÀY
     renderCalendar();
+    checkUpcomingHolidays();
 }
 
     // --- TÍNH NĂNG NHẮC NHỞ THÔNG MINH ---
@@ -496,11 +497,7 @@ function loadSavedData() {
     }
 }
 
-function handleNoteInput(el) {
-    const holiday = el.dataset.holiday || "";
-    if (holiday && !el.value.startsWith(holiday)) el.value = holiday + "\n" + el.value.trimStart();
-    checkLines(el);
-}
+
 
 function checkLines(el) {
     const hasNewLine = el.value.includes('\n');
@@ -509,26 +506,7 @@ function checkLines(el) {
     else parent.classList.remove('has-multi-line');
 }
 
-function setupNoteExpand() {
-    document.querySelectorAll('.in-n').forEach(el => {
-        if (el.dataset.bound) return;
-        el.dataset.bound = "1";
-        el.addEventListener('focus', function () {
-            const rect = el.getBoundingClientRect();
-            el.dataset.oldStyle = el.getAttribute('style') || "";
-            el.style.setProperty('position', 'fixed', 'important');
-            el.style.setProperty('top', Math.max(10, rect.top - 50) + 'px', 'important');
-            el.style.setProperty('left', '10%', 'important');
-            el.style.setProperty('width', '80%', 'important');
-            el.style.setProperty('height', '120px', 'important');
-            el.style.setProperty('z-index', '9999', 'important');
-            el.style.setProperty('background', '#fff', 'important');
-            el.style.setProperty('border', '2px solid #007bff', 'important');
-            el.style.setProperty('box-shadow', '0 10px 30px rgba(0,0,0,0.3)', 'important');
-        });
-        el.addEventListener('blur', function () { el.setAttribute('style', el.dataset.oldStyle || ""); });
-    });
-}
+
 
 function resetData() {
     if (confirm("Xóa sạch công tháng này?")) {
