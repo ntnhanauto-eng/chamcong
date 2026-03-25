@@ -1,4 +1,4 @@
-const CACHE_NAME = "hvs-" + "v20"; // 🔥 đổi version mỗi lần update
+const CACHE_NAME = "hvs-" + "v20.5"; // 🔥 đổi version mỗi lần update
 const urlsToCache = [
   "./",
   "./index.html",
@@ -9,7 +9,7 @@ const urlsToCache = [
 
 // Cài đặt SW + cache
 self.addEventListener("install", event => {
-  self.skipWaiting(); // 🔥 bắt buộc để update ngay
+ //  self.skipWaiting(); // 🔥 bắt buộc để update ngay
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
@@ -48,6 +48,6 @@ self.addEventListener("fetch", event => {
 
 self.addEventListener("message", event => {
   if (event.data.action === "skipWaiting") {
-    self.skipWaiting();
+   self.skipWaiting(); 
   }
 });
