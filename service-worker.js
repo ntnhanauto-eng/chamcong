@@ -1,27 +1,53 @@
-const CACHE_NAME = "hvs-cache-v1";
-
+const CACHE_NAME = "hvs-" + "v7"; // 🔥 đổi version mỗi lần update
 const urlsToCache = [
-  "/",
-  "index.html",
-  "manifest.json",
-  "icon-192.png",
-  "icon-512.png",
-  "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
-  "https://cdn.jsdelivr.net/npm/chart.js"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
-// Cài SW
+// Cài đặt SW + cache
 self.addEventListener("install", event => {
+  self.skipWaiting(); // 🔥 bắt buộc để update ngay
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
 });
 
-// Load từ cache trước
+// Kích hoạt SW mới
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key); // 🔥 xóa cache cũ
+          }
+        })
+      )
+    )
+  );
+  self.clients.claim(); // 🔥 chiếm quyền ngay
+});
+
+// Fetch (luôn lấy bản mới trước)
 self.addEventListener("fetch", event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    fetch(event.request)
+      .then(res => {
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, res.clone());
+          return res;
+        });
+      })
+      .catch(() => caches.match(event.request))
   );
+});
+
+self.addEventListener("message", event => {
+  if (event.data.action === "skipWaiting") {
+    self.skipWaiting();
+  }
 });
