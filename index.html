@@ -218,7 +218,7 @@
 
 <script>
 
-const APP_VERSION = "v20.5"; // 🔥 đổi mỗi lần update
+const APP_VERSION = "v21.4"; // 🔥 đổi mỗi lần update
 console.log("VERSION HVS " + APP_VERSION);
     
 // --- 1. CẤU HÌNH NGÀY LỄ ---
@@ -784,25 +784,43 @@ if ("serviceWorker" in navigator) {
         }, 5000);
 
         // 🔥 phát hiện có bản mới
-        reg.onupdatefound = () => {
-            const newWorker = reg.installing;
+      reg.onupdatefound = () => {
+    const newWorker = reg.installing;
 
-            newWorker.onstatechange = () => {
-                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-                    showUpdateBanner();
-                }
-            };
-        };
+    newWorker.onstatechange = () => {
+        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+
+            console.log("🔥 Có version mới → auto update");
+
+            // ⛔ bỏ banner
+            // showUpdateBanner();
+
+            // ✅ Tự update sau 2 giây
+            setTimeout(() => {
+                updateApp();
+            }, 2000);
+        }
+    };
+};
 
     }).catch(err => console.log("SW error", err));
 
     // 🔥 reload khi SW mới active
-   let refreshing = false;
+   
 
 
 }
 
+ let refreshing = false;
+navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshing) return;
+    refreshing = true;
 
+    // 🔥 Auto reload sau 5 giây khi có version mới
+    setTimeout(() => {
+        location.reload();
+    }, 5000);
+});
 /*navigator.serviceWorker.addEventListener('controllerchange', function () {
     location.reload();
 }); */
@@ -843,13 +861,9 @@ function updateApp() {
     navigator.serviceWorker.getRegistration().then(reg => {
         if (reg && reg.waiting) {
             reg.waiting.postMessage({ action: "skipWaiting" });
-
-            // 👉 chỉ reload khi user bấm
-            window.location.reload();
         }
     });
 }
-
 
     
 </script>
